@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Market{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <h1>Market</h1>
+    <table style="width:100%">
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Time</th>
+      </tr>
+      <tr>
+        <td>{{ currency }}</td>
+        <td>{{ response['price'] }}</td>
+        <td>{{ response['time'].time() }}</td>
+      </tr>
+    </table>
+{% endblock %}

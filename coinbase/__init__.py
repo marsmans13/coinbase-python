@@ -1,19 +1,22 @@
 import os
 from flask import Flask, Blueprint
+from coinbase import db, auth, markets
 
+app = Flask(__name__, instance_relative_config=True)
+app.register_blueprint(auth.bp, url_prefix='/auth')
+app.register_blueprint(markets.bp)
+app.config.from_mapping(
+    SECRET_KEY='dev',
+    DATABASE=os.path.join(app.instance_path, 'coinbase.sqlite')
+)
 
 def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
-
-    from . import db, auth
     db.init_app(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'coinbase.sqlite'),
     )
-
-    app.register_blueprint(auth.bp)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -21,18 +24,8 @@ def create_app(test_config=None):
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
-
-    # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
-    except OSError:
+    except:
         pass
-
-    return app
-
-    # a test page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
     return app
