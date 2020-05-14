@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Market</h1>
+    <div><a href="{{ url_for('market_bp.update_alerts') }}">Update Alerts</a></div>
     <table style="width:100%">
       <tr>
         <th>Product</th>
@@ -15,7 +15,14 @@
       <tr>
         <td>{{ currency }}</td>
         <td>{{ response['price'] }}</td>
-        <td>{{ response['time'].time() }}</td>
+        <td>{{ response['time'].strftime('%H:%M:%S') }}</td>
       </tr>
     </table>
+    <form>
+        <div class="dropdown">
+            <div>{{ form.currency.label }}</div>
+            <div>{{ form.currency() }}</div>
+        </div>
+        <button type="submit" class="btn">{{ form.submit() }}</button>
+    </form>
 {% endblock %}

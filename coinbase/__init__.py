@@ -4,7 +4,7 @@ from coinbase import db, auth, markets
 
 app = Flask(__name__, instance_relative_config=True)
 app.register_blueprint(auth.bp, url_prefix='/auth')
-app.register_blueprint(markets.bp)
+app.register_blueprint(markets.market_bp)
 app.config.from_mapping(
     SECRET_KEY='dev',
     DATABASE=os.path.join(app.instance_path, 'coinbase.sqlite')

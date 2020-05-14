@@ -2,5 +2,6 @@ venv/
 instance/
 .idea
 *.pyc
+secrets.sh
 __pycache__
 config.py

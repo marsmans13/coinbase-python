@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block header %}
+  <h1>{% block title %}Market{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="/update-alerts">
+        <div class="dropdown">
+            <div>{{ form.currency.label }}</div>
+            <div>{{ form.currency() }}</div>
+        </div>
+        <div>{{ form.low_price.label }}</div>
+        <div>{{ form.low_price() }}</div>
+        <div>{{ form.high_price.label }}</div>
+        <div>{{ form.high_price() }}</div>
+        <button type="submit" class="btn">{{ form.submit() }}</button>
+    </form>
+{% endblock %}

@@ -1,6 +1,14 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - Flaskr</title>
+<head>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
 <nav>
   <h1>Crypto Trade</h1>
   <ul>
@@ -15,6 +23,7 @@
 </nav>
 <section class="content">
   <header>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block header %}{% endblock %}
   </header>
   {% for message in get_flashed_messages() %}
