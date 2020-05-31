@@ -1,28 +1,38 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Market{% endblock %}</h1>
+  <h2 id="title">{% block title %}Market{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
-    <div><a href="{{ url_for('market_bp.update_alerts') }}">Update Alerts</a></div>
-    <table style="width:100%">
+    <table class="table" style="width:100%">
       <tr>
         <th>Product</th>
         <th>Price</th>
         <th>Time</th>
       </tr>
+        {% for r in response %}
       <tr>
-        <td>{{ currency }}</td>
-        <td>{{ response['price'] }}</td>
-        <td>{{ response['time'].strftime('%H:%M:%S') }}</td>
+          <td>
+              <a class="link" href="{{ url_for('market_bp.get_product_details', currency_id=r[0][:-4] ) }}">
+                  {{ r[0] }}
+              </a>
+          </td>
+        <td>{{ r[1]['price'] }}</td>
+        <td>{{ r[1]['time'].strftime('%H:%M:%S') }}</td>
       </tr>
+        {% endfor %}
     </table>
-    <form>
-        <div class="dropdown">
-            <div>{{ form.currency.label }}</div>
-            <div>{{ form.currency() }}</div>
+    <div class="row">
+        <div class="col-sm">
+            <form method="post">
+                <div class="dropdown">
+                    <div>{{ form.currency.label }}</div>
+                    <div>{{ form.currency() }}</div>
+                </div>
+<!--                <button type="sumit" class="btn button2 float-left">{{ form.submit() }}</button>-->
+                <input type="submit" class="btn" value="Add">
+            </form>
         </div>
-        <button type="submit" class="btn">{{ form.submit() }}</button>
-    </form>
+    </div>
 {% endblock %}

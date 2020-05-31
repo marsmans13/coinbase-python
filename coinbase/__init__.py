@@ -1,31 +1,59 @@
 import os
-from flask import Flask, Blueprint
-from coinbase import db, auth, markets
+import sys
+import inspect
+from flask import Flask
+import flask_login
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+from config import Config
+
 
 app = Flask(__name__, instance_relative_config=True)
-app.register_blueprint(auth.bp, url_prefix='/auth')
-app.register_blueprint(markets.market_bp)
-app.config.from_mapping(
-    SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'coinbase.sqlite')
-)
+"APPLICATION CREATED __INIT__"
+config = Config()
+app.config.from_object(config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-def create_app(test_config=None):
+from coinbase.auth import auth_bp
+from coinbase.markets import market_bp
+# from coinbase.models import *
+
+
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(market_bp, url_prefix='/market')
+
+# login_manager = flask_login.LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = 'login'
+
+
+def create_app(application, test_config=None):
+
+    application.config.from_pyfile('config.py', silent=True)
+    print("APPLICATION CONFIGURED FROM FILE")
+
+    connect_to_db(application)
+    print("Connected to DB")
+    with app.app_context():
+        db.create_all()
+
+    return application
+
+
+def connect_to_db(app, db_uri="postgresql:///coinbase"):
+    # app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    # app.config['SQLALCHEMY_ECHO'] = False
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # app.config['SECRET_KEY'] = b'_5#y2L"F4Q8z\n\xec]/'
+    app.config['CSRF_ENABLED'] = True
+    db.app = app
     db.init_app(app)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'coinbase.sqlite'),
-    )
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
-    try:
-        os.makedirs(app.instance_path)
-    except:
-        pass
-    return app
+
+if __name__ == "__main__":
+    create_app(app)
+    # connect_to_db(app)
+
+    app.run(debug=True)

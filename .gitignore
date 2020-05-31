@@ -5,3 +5,6 @@ instance/
 secrets.sh
 __pycache__
 config.py
+migrations
+env/
+.DS_Store

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h2 id="title">{% block title %}Product Details{% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+{% set bal = {'balance': 0} %}
+    <table class="table" style="width:100%">
+      <tr>
+        <th>Currency</th>
+        <th>Price</th>
+        <th>Balance</th>
+          <th>Balance USD</th>
+        <th>Available</th>
+      </tr>
+      <tr>
+        <td>{{ product['currency'] }}</td>
+        <td>{{ market['price'] }}</td>
+        <td>{{ product['balance']|round(8, 'common') }}</td>
+          <td>{{ (product['balance'] * market['price'])|round(2, 'common') }}</td>
+        <td>{{ product['available']|round(8, 'common') }}</td>
+      </tr>
+    </table>
+    <form method="post">
+        <input type="submit" class="btn" value="Delete">
+    </form>
+    <h2>History</h2>
+    <table class="table" style="width:100%">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Balance</th>
+                <th scope="col">Transaction</th>
+                <th scope="col">Net Gain</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(hist|length) %}
+                <tr>
+                    <td>{{ hist[i]['created_at'].month }}-{{ hist[i]['created_at'].day }}</td>
+                    {% if hist[i]['amount'] < 0 %}
+                        <td style="color: red">{{ hist[i]['amount']|round(8, 'common') }}</td>
+                    {% else %}
+                        <td style="color: #88960F">{{ hist[i]['amount']|round(8, 'common') }}</td>
+                    {% endif %}
+                    {% if hist[i]['balance'] == 0 %}
+                        <td>0.00</td>
+                    {% else %}
+                        <td>{{ hist[i]['balance']|round(8, 'common') }}</td>
+                    {% endif %}
+                    {% if fills|length > i %}
+                        <td>{{ (hist[i]['amount'] * fills[i]['price'])|round(2, 'common') }}</td>
+                        <td>{{ (hist[i]['balance'] * fills[i]['price'])|round(2, 'common') }}</td>
+                        {% if fills|length - 1 > i %}
+                            <td>{{ (-1*(hist[i+1]['amount'] * fills[i+1]['price']) - (hist[i]['amount'] * fills[i]['price']))|round(2, 'common') }}</td>
+                        {% else %}
+                            <td>NA</td>
+                        {% endif %}
+                    {% else %}
+                        <td>NA</td>
+                        <td>{{ (hist[i]['balance'] * market['price'])|round(2, 'common') }}</td>
+                        <td>NA</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

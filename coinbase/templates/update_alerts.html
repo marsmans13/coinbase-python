@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="POST" action="/update-alerts">
+    <form method="POST" action="/market/update-alerts">
         <div class="dropdown">
             <div>{{ form.currency.label }}</div>
             <div>{{ form.currency() }}</div>
@@ -13,6 +13,6 @@
         <div>{{ form.low_price() }}</div>
         <div>{{ form.high_price.label }}</div>
         <div>{{ form.high_price() }}</div>
-        <button type="submit" class="btn">{{ form.submit() }}</button>
+        <input type="submit" class="btn" value="Add Alert">
     </form>
 {% endblock %}
